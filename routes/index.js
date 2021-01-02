@@ -34,5 +34,9 @@ router.post('/department/addCourse', DepartmentController.addCourse)
 router.post('/department/editCourse', DepartmentController.editCourse)
 router.post('/department/deleteCourse', DepartmentController.deleteCourse)
 
+router.post('/department/points', DepartmentController.ponitList)
+router.post('/department/addPoints', DepartmentController.addPoints)
+router.post('/department/deletePoints', DepartmentController.deletePoints)
+
 
 export default router

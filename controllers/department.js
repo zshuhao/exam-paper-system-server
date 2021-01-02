@@ -37,10 +37,16 @@ export default class DepartmentController {
 
     static async deleteDepartment(ctx) {
         const req = ctx.request.body
+        const CheckSQL = 'select * from professions where d_id=?'
         const SQL = 'delete from departments where d_id=?'
         try {
-            const res = await query(SQL, [req.id])
-            ctx.body = successData('删除成功！')
+            const canDelete = await query(CheckSQL, [req.id])
+            if (canDelete.length > 0) {
+                ctx.body = errorData('该院校下已包含专业，请先将该院校下的专业清空！')
+            } else {
+                const res = await query(SQL, [req.id])
+                ctx.body = successData('删除成功！')
+            }
         } catch (error) {
             ctx.body = errorData('删除失败！')
         }
@@ -81,10 +87,16 @@ export default class DepartmentController {
 
     static async deleteProfession(ctx) {
         const req = ctx.request.body
+        const CheckSQL = 'select * from courses where p_id=?'
         const SQL = 'delete from professions where p_id=?'
         try {
-            const res = await query(SQL, [req.id])
-            ctx.body = successData('删除成功！')
+            const canDelete = await query(CheckSQL, [req.id])
+            if (canDelete.length > 0) {
+                ctx.body = errorData('该专业下已包含课程，请先将该专业下的课程清空！')
+            } else {
+                const res = await query(SQL, [req.id])
+                ctx.body = successData('删除成功！')
+            }
         } catch (error) {
             ctx.body = errorData('删除失败！')
         }
@@ -131,6 +143,46 @@ export default class DepartmentController {
             ctx.body = successData('删除成功！')
         } catch (error) {
             ctx.body = errorData('删除失败！')
+        }
+    }
+
+    // 知识点
+    static async ponitList(ctx) {
+        const req = ctx.request.body
+        const SQL = 'SELECT * FROM knowledge where c_id=?'
+        try {
+            const res = await query(SQL, [req.id])
+            ctx.body = successData(res)
+        } catch (error) {
+            ctx.body = errorData('获取列表失败！')
+        }
+    }
+
+    static async addPoints(ctx) {
+        const req = ctx.request.body
+        const SQL = 'insert into knowledge (k_name, k_pid, c_id) value (?, ?, ?)'
+        try {
+            const res = await query(SQL, [req.name, req.kPid, req.cId])
+            ctx.body = successData()
+        } catch (error) {
+            ctx.body = errorData('获取列表失败！')
+        }
+    }
+
+    static async deletePoints(ctx) {
+        const req = ctx.request.body
+        const search = 'SELECT * FROM knowledge where k_pid=?'
+        const SQL = 'delete from knowledge where k_id=?'
+        try {
+            const res = await query(search, [req.id])
+            if (res.length > 0) {
+                const delChildSQL =  'delete from knowledge where k_pid=?'
+                const delChild = await query(delChildSQL, [req.id])
+            }
+            const del = await query(SQL, [req.id])
+            ctx.body = successData()
+        } catch (error) {
+            ctx.body = errorData('获取列表失败！')
         }
     }
 }
