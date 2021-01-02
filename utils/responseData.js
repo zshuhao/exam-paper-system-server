@@ -12,7 +12,7 @@ export const errorData = (desc, status = 1) => {
     return {
         data: null,
         status,
-        success: true,
+        success: false,
         errDesc: desc
     }
 }
