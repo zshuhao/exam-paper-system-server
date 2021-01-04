@@ -54,9 +54,14 @@ export default class DepartmentController {
 
     // 专业
     static async professionList(ctx) {
-        const SQL = 'SELECT * FROM professions'
+        const req = ctx.request.body
+        let SQL = 'SELECT * FROM professions'
+        if (req.depId) {
+            SQL = 'SELECT * FROM professions where d_id=?'
+        }
+        // const SQL = 'SELECT * FROM professions'
         try {
-            const res = await query(SQL)
+            const res = await query(SQL, [req.depId])
             ctx.body = successData(res)
         } catch (error) {
             ctx.body = errorData('获取列表失败！')
@@ -104,9 +109,14 @@ export default class DepartmentController {
 
     // 科目
     static async courseList(ctx) {
-        const SQL = 'SELECT * FROM courses'
+        const req = ctx.request.body
+        let SQL = 'SELECT * FROM courses'
+        // const SQL = 'SELECT * FROM courses'
+        if (req.pId) {
+            SQL = 'SELECT * FROM courses where p_id=?'
+        }
         try {
-            const res = await query(SQL)
+            const res = await query(SQL, [req.pId])
             ctx.body = successData(res)
         } catch (error) {
             ctx.body = errorData('获取列表失败！')
