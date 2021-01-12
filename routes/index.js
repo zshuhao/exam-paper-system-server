@@ -1,6 +1,7 @@
 import Router from '@koa/router'
 import SystemController from '../controllers/system'
 import DepartmentController from '../controllers/department'
+import QuestionController from '../controllers/question'
 
 const router = new Router()
 
@@ -37,6 +38,10 @@ router.post('/department/deleteCourse', DepartmentController.deleteCourse)
 router.post('/department/points', DepartmentController.ponitList)
 router.post('/department/addPoints', DepartmentController.addPoints)
 router.post('/department/deletePoints', DepartmentController.deletePoints)
+
+// 题库管理
+router.post('/question/add', QuestionController.addQuestion)
+router.post('/question/list', QuestionController.questionList)
 
 
 export default router
