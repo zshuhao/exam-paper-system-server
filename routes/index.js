@@ -42,6 +42,8 @@ router.post('/department/deletePoints', DepartmentController.deletePoints)
 // 题库管理
 router.post('/question/add', QuestionController.addQuestion)
 router.post('/question/list', QuestionController.questionList)
+router.post('/question/ques', QuestionController.getQuestion)
+router.post('/question/edit', QuestionController.editQuestion)
 
 
 export default router

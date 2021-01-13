@@ -28,13 +28,15 @@ export default class QuestionController {
     static async questionList(ctx) {
         const req = ctx.request.body
         // console.log(req);
-        let SQL = 'SELECT * FROM question'
+        let SQL = 'SELECT SQL_CALC_FOUND_ROWS * FROM question'
+        const COUNTSQL = 'SELECT FOUND_ROWS() as total'
         const map = {
             questionType: 'q_type',
             difficulty: 'q_level',
             department: 'department',
             profession: 'profession',
-            course: 'course'
+            course: 'course',
+            point: 'point'
         }
         const params = []
         for (const key in req) {
@@ -51,13 +53,55 @@ export default class QuestionController {
             SQL += search
         }
         const start = (req.pageNo - 1)*req.pageSize
-        SQL += ' limit ?, ?;'
+        SQL += ` limit ${start}, ${req.pageSize};`
         // console.log(SQL);
         try {
-            const res = await query(SQL, [start, req.pageSize])
-            ctx.body = successData(res)
+            const res = await query(`${SQL} ${COUNTSQL}`)
+            ctx.body = successData({
+                pageNo: req.pageNo,
+                pageSize: req.pageSize,
+                count: res[1][0]['total'],
+                data: res[0]
+            })
         } catch (error) {
+            console.log(error)
             ctx.body = errorData('获取列表失败！')
+        }
+    }
+
+    static async getQuestion(ctx) {
+        const req = ctx.request.body
+        const SQL = 'SELECT * FROM question where q_id=?'
+        try {
+            const res = await query(SQL, [req.id])
+            ctx.body = successData(res[0])
+        } catch (error) {
+            ctx.body = errorData('获取信息失败！')
+        }
+    }
+
+    static async editQuestion(ctx) {
+        const req = ctx.request.body
+        const SQL = 'update question set q_content=?, q_explain=?, q_answer=?, q_type=?, q_level=?, department=?, course=?, profession=?, point=? where q_id=?'
+        try {
+            const res = await query(SQL, 
+                [
+                    req.question,
+                    req.analysis,
+                    req.solution,
+                    req.type,
+                    req.level,
+                    req.department,
+                    req.course,
+                    req.profession,
+                    req.point,
+                    req.id
+                ]
+            )
+            ctx.body = successData('修改成功！')
+        } catch (error) {
+            console.log(error)
+            ctx.body = errorData('添加失败！')
         }
     }
 }
