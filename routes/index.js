@@ -45,5 +45,8 @@ router.post('/question/list', QuestionController.questionList)
 router.post('/question/ques', QuestionController.getQuestion)
 router.post('/question/edit', QuestionController.editQuestion)
 
+// 试卷管理
+router.post('/exam/create', QuestionController.createExam)
+
 
 export default router

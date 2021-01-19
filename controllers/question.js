@@ -1,6 +1,6 @@
 import { query } from '../mysql/db'
 import { successData, errorData } from '../utils/responseData'
-
+const moment = require('moment')
 export default class QuestionController {
     static async addQuestion(ctx) {
         const req = ctx.request.body
@@ -99,6 +99,28 @@ export default class QuestionController {
                 ]
             )
             ctx.body = successData('修改成功！')
+        } catch (error) {
+            console.log(error)
+            ctx.body = errorData('添加失败！')
+        }
+    }
+
+    static async createExam(ctx) {
+        const req = ctx.request.body
+        const SQL = 'insert into exam (e_name, e_questions, user, course, time) value (?, ?, ?, ?, ?)'
+        const time = moment().format('YYYY-MM-DD')
+        const questions = req.questions.map(item => item.q_id)
+        try {
+            const res = await query(SQL, 
+                [
+                    req.name,
+                    questions,
+                    req.userId,
+                    req.course,
+                    time
+                ]
+            )
+            ctx.body = successData('添加成功！')
         } catch (error) {
             console.log(error)
             ctx.body = errorData('添加失败！')
