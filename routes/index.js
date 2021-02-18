@@ -47,6 +47,8 @@ router.post('/question/edit', QuestionController.editQuestion)
 
 // 试卷管理
 router.post('/exam/create', QuestionController.createExam)
-
+router.post('/exam/list', QuestionController.examList)
+router.post('/exam/down', QuestionController.downExam)
+router.post('/exam/delete', QuestionController.deleteExam)
 
 export default router
