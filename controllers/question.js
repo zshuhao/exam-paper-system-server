@@ -131,7 +131,8 @@ export default class QuestionController {
         const req = ctx.request.body
         // console.log(req);
         let SQL = 'SELECT SQL_CALC_FOUND_ROWS * FROM exam'
-        const COUNTSQL = 'SELECT FOUND_ROWS() as total'
+        const COUNTSQL = 'SELECT FOUND_ROWS() as to
+        tal'
         const map = {
             examName: 'e_name',
             user: 'user'
